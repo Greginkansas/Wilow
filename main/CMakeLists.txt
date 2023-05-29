@@ -31,4 +31,4 @@ endif()
 
 register_component()
 
-spiffs_create_partition_image(audio ../spiffs/audio FLASH_IN_PROJECT)
+spiffs_create_partition_image(ui ../spiffs/ui FLASH_IN_PROJECT)

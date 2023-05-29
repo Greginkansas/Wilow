@@ -58,8 +58,8 @@
 #include "endpoint/rest.h"
 #endif
 
-#define I2S_PORT        I2S_NUM_0
-#define PARTLABEL_AUDIO "audio"
+#define I2S_PORT     I2S_NUM_0
+#define PARTLABEL_UI "ui"
 
 bool recording = false;
 
@@ -76,14 +76,14 @@ esp_lcd_panel_handle_t hdl_lcd;
 void play_audio_err(void)
 {
     gpio_set_level(get_pa_enable_gpio(), 1);
-    esp_audio_sync_play(hdl_ea, "spiffs://spiffs/audio/error.flac", 0);
+    esp_audio_sync_play(hdl_ea, "spiffs://spiffs/ui/error.flac", 0);
     gpio_set_level(get_pa_enable_gpio(), 0);
 }
 
 void play_audio_ok(void)
 {
     gpio_set_level(get_pa_enable_gpio(), 1);
-    esp_audio_sync_play(hdl_ea, "spiffs://spiffs/audio/success.flac", 0);
+    esp_audio_sync_play(hdl_ea, "spiffs://spiffs/ui/success.flac", 0);
     gpio_set_level(get_pa_enable_gpio(), 0);
 }
 
@@ -747,7 +747,7 @@ static void init_esp_audio(audio_board_handle_t hdl)
 
     flac_decoder_cfg_t cfg_fd = DEFAULT_FLAC_DECODER_CONFIG();
     cfg_fd.stack_in_ext = true;
-    cfg_fd.task_core =1;
+    cfg_fd.task_core = 1;
 
     ret = esp_audio_codec_lib_add(hdl_ea, AUDIO_CODEC_TYPE_DECODER, flac_decoder_init(&cfg_fd));
     if (ret != ESP_OK) {
@@ -791,14 +791,14 @@ static void init_esp_audio(audio_board_handle_t hdl)
     ESP_LOGI(TAG, "audio player initialized");
 }
 
-static esp_err_t init_spiffs_audio(void)
+static esp_err_t init_spiffs_ui(void)
 {
     esp_err_t ret = ESP_OK;
     periph_spiffs_cfg_t pcfg_spiffs = {
         .format_if_mount_failed = false,
         .max_files = 5,
-        .partition_label = PARTLABEL_AUDIO,
-        .root = "/spiffs/audio",
+        .partition_label = PARTLABEL_UI,
+        .root = "/spiffs/ui",
     };
     esp_periph_handle_t phdl_spiffs = periph_spiffs_init(&pcfg_spiffs);
     ret = esp_periph_start(hdl_pset, phdl_spiffs);
@@ -811,7 +811,7 @@ static esp_err_t init_spiffs_audio(void)
         ESP_LOGI(TAG, "periph_spiffs_is_mounted");
         vTaskDelay(500 / portTICK_PERIOD_MS);
     }
-
+    ESP_LOGI(TAG, "SPIFFS MOUNTED");
     return ret;
 }
 
@@ -848,16 +848,20 @@ void app_main(void)
     if (ld == NULL) {
         ESP_LOGE(TAG, "lv_disp_t ld is NULL!!!!");
     } else {
-        // static lv_style_t lv_st_montserrat_20;
-        // lv_style_init(&lv_st_montserrat_20);
+        static lv_style_t lv_st_willow;
+        lv_style_init(&lv_st_willow);
+
+        lv_font_t *lv_font_willow = lv_font_load("A/spiffs/ui/font.bin");
+
         // lv_style_set_text_color(&lv_st_montserrat_20, lv_color_black());
-        // lv_style_set_text_font(&lv_st_montserrat_20, &lv_font_montserrat_14);
+        lv_style_set_text_font(&lv_st_willow, &lv_font_willow);
         // lv_style_set_text_opa(&lv_st_montserrat_20, LV_OPA_30);
 
         lvgl_port_lock(0);
 
         lv_obj_t *scr_act = lv_disp_get_scr_act(ld);
         lv_obj_t *lbl_hdr = lv_label_create(scr_act);
+
         btn_cancel = lv_btn_create(scr_act);
         lbl_btn_cancel = lv_label_create(btn_cancel);
         lbl_ln1 = lv_label_create(scr_act);
@@ -867,7 +871,13 @@ void app_main(void)
         lv_label_set_recolor(lbl_ln3, true);
         lv_label_set_recolor(lbl_ln4, true);
         lv_obj_add_event_cb(scr_act, cb_scr, LV_EVENT_ALL, NULL);
-        // lv_obj_add_style(lbl_hdr, &lv_st_montserrat_20, 0);
+
+        lv_obj_add_style(lbl_hdr, &lv_st_willow, 0);
+        lv_obj_add_style(lbl_ln1, &lv_st_willow, 0);
+        lv_obj_add_style(lbl_ln2, &lv_st_willow, 0);
+        lv_obj_add_style(lbl_ln3, &lv_st_willow, 0);
+        lv_obj_add_style(lbl_ln4, &lv_st_willow, 0);
+
         lv_label_set_text_static(lbl_btn_cancel, "Cancel");
         lv_label_set_text_static(lbl_hdr, "Welcome to Willow!");
         lv_obj_add_flag(btn_cancel, LV_OBJ_FLAG_HIDDEN);
@@ -939,7 +949,7 @@ void app_main(void)
     init_ap_to_api();
 #endif
     init_esp_audio(hdl_audio_board);
-    init_spiffs_audio();
+    init_spiffs_ui();
     start_rec();
 
     ESP_LOGI(TAG, "app_main() - start_rec() finished");
