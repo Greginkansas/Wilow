@@ -851,11 +851,10 @@ void app_main(void)
         static lv_style_t lv_st_willow;
         lv_style_init(&lv_st_willow);
 
-        lv_font_t *lv_font_willow = lv_font_load("A/spiffs/ui/font.bin");
+        lv_font_t * lv_font_willow;
+        lv_font_willow = lv_font_load("A:spiffs/ui/font.bin");
 
-        // lv_style_set_text_color(&lv_st_montserrat_20, lv_color_black());
-        lv_style_set_text_font(&lv_st_willow, &lv_font_willow);
-        // lv_style_set_text_opa(&lv_st_montserrat_20, LV_OPA_30);
+        lv_style_set_text_font(&lv_st_willow, lv_font_willow);
 
         lvgl_port_lock(0);
 
@@ -872,7 +871,10 @@ void app_main(void)
         lv_label_set_recolor(lbl_ln4, true);
         lv_obj_add_event_cb(scr_act, cb_scr, LV_EVENT_ALL, NULL);
 
+        //lv_style_set_text_font(&lv_st_willow, &lv_font_montserrat_20);
+
         lv_obj_add_style(lbl_hdr, &lv_st_willow, 0);
+
         lv_obj_add_style(lbl_ln1, &lv_st_willow, 0);
         lv_obj_add_style(lbl_ln2, &lv_st_willow, 0);
         lv_obj_add_style(lbl_ln3, &lv_st_willow, 0);
