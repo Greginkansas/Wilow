@@ -967,7 +967,7 @@ void app_main(void)
 
     if (hdl_netif != NULL) {
 #if defined(CONFIG_WILLOW_WAKE_WORD_HIESP) || defined(CONFIG_SR_WN_WN9_HIESP)
-        char *wake_help = "Say ñ to start!";
+        char *wake_help = "Say 'Hi ESP' to start!";
 #elif defined(CONFIG_WILLOW_WAKE_WORD_ALEXA) || defined(CONFIG_SR_WN_WN9_ALEXA)
         char *wake_help = "Say 'Alexa' to start!";
 #elif defined(CONFIG_WILLOW_WAKE_WORD_HILEXIN) || defined(CONFIG_SR_WN_WN9_HILEXIN)
