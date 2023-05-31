@@ -844,6 +844,7 @@ void app_main(void)
 
     init_display();
     init_lvgl_display();
+    init_spiffs_ui();
 
     if (ld == NULL) {
         ESP_LOGE(TAG, "lv_disp_t ld is NULL!!!!");
@@ -852,8 +853,10 @@ void app_main(void)
         lv_style_init(&lv_st_willow);
 
         lv_font_t * lv_font_willow;
-        lv_font_willow = lv_font_load("A:spiffs/ui/font.bin");
+        ESP_LOGI(TAG, "LOADING FONT");
+        lv_font_willow = lv_font_load("A/spiffs/ui/font.bin");
 
+        ESP_LOGI(TAG, "SETTING FONT");
         lv_style_set_text_font(&lv_st_willow, lv_font_willow);
 
         lvgl_port_lock(0);
@@ -873,6 +876,7 @@ void app_main(void)
 
         //lv_style_set_text_font(&lv_st_willow, &lv_font_montserrat_20);
 
+        ESP_LOGI(TAG, "ADDING STYLE");
         lv_obj_add_style(lbl_hdr, &lv_st_willow, 0);
 
         lv_obj_add_style(lbl_ln1, &lv_st_willow, 0);
@@ -951,7 +955,6 @@ void app_main(void)
     init_ap_to_api();
 #endif
     init_esp_audio(hdl_audio_board);
-    init_spiffs_ui();
     start_rec();
 
     ESP_LOGI(TAG, "app_main() - start_rec() finished");
@@ -964,7 +967,7 @@ void app_main(void)
 
     if (hdl_netif != NULL) {
 #if defined(CONFIG_WILLOW_WAKE_WORD_HIESP) || defined(CONFIG_SR_WN_WN9_HIESP)
-        char *wake_help = "Say 'Hi ESP' to start!";
+        char *wake_help = "Say ñ to start!";
 #elif defined(CONFIG_WILLOW_WAKE_WORD_ALEXA) || defined(CONFIG_SR_WN_WN9_ALEXA)
         char *wake_help = "Say 'Alexa' to start!";
 #elif defined(CONFIG_WILLOW_WAKE_WORD_HILEXIN) || defined(CONFIG_SR_WN_WN9_HILEXIN)
