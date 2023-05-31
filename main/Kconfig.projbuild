@@ -1,13 +1,13 @@
 menu "Willow Configuration"
 
-config WIFI_SSID
+config WILLOW_WIFI_SSID
     string "WiFi SSID"
     depends on !WILLOW_ETHERNET
     default "myssid"
     help
         SSID (network name) for Willow to connect to.
 
-config WIFI_PASSWORD
+config WILLOW_WIFI_PASSWORD
     string "WiFi Password"
     depends on !WILLOW_ETHERNET
     default "mypassword"
@@ -47,7 +47,7 @@ choice
     bool "Audio response using WIS TTS - English only for now"
 endchoice
 
-config SERVER_URI
+config WILLOW_WIS_SERVER_URL
     depends on WILLOW_USE_WIS
     string "Willow Inference Server URL"
     default "https://infer.tovera.io/api/willow"
@@ -106,14 +106,14 @@ choice WILLOW_USE_ENDPOINT
                 Send command inferred from speech to generic REST endpoint
 endchoice
 
-config HOMEASSISTANT_HOST
+config WILLOW_ENDPOINT_HOMEASSISTANT_HOST
     string "Home Assistant host"
     default "homeassistant.local"
     depends on WILLOW_USE_ENDPOINT_HOMEASSISTANT
     help
         Hostname/IP address for your Home Assistant instance.
 
-config HOMEASSISTANT_PORT
+config WILLOW_ENDPOINT_HOMEASSISTANT_PORT
     int "Home Assistant port"
     default 8123
     depends on WILLOW_USE_ENDPOINT_HOMEASSISTANT
@@ -121,13 +121,13 @@ config HOMEASSISTANT_PORT
     help
         TCP port for your Home Assistant instance.
 
-config HOMEASSISTANT_TLS
+config WILLOW_ENDPOINT_HOMEASSISTANT_TLS
     bool "Home Assistant TLS/SSL"
     depends on WILLOW_USE_ENDPOINT_HOMEASSISTANT
     help
         Enable if your Home Assistant port has TLS/SSL enabled.
 
-config HOMEASSISTANT_TOKEN
+config WILLOW_ENDPOINT_HOMEASSISTANT_TOKEN
     depends on WILLOW_USE_ENDPOINT_HOMEASSISTANT
     default "your_ha_token"
     string "Home Assistant Auth Token"

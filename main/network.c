@@ -42,8 +42,8 @@ esp_err_t init_wifi(void)
 {
     esp_err_t ret = ESP_OK;
     periph_wifi_cfg_t cfg_pwifi = {
-        .ssid = CONFIG_WIFI_SSID,
-        .password = CONFIG_WIFI_PASSWORD,
+        .ssid = CONFIG_WILLOW_WIFI_SSID,
+        .password = CONFIG_WILLOW_WIFI_PASSWORD,
     };
     esp_periph_handle_t hdl_pwifi = periph_wifi_init(&cfg_pwifi);
 

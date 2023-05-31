@@ -25,21 +25,21 @@ ha_tls = False
 file = open(willow_config, 'r')
 lines = file.readlines()
 for line in lines:
-    if 'CONFIG_HOMEASSISTANT_HOST=' in line:
-        ha_host = line.replace('CONFIG_HOMEASSISTANT_HOST=', '')
+    if 'CONFIG_WILLOW_ENDPOINT_HOMEASSISTANT_HOST=' in line:
+        ha_host = line.replace('CONFIG_WILLOW_ENDPOINT_HOMEASSISTANT_HOST=', '')
         ha_host = ha_host.strip('\n')
         ha_host = ha_host.replace('\"', '')
 
-    if 'CONFIG_HOMEASSISTANT_PORT=' in line:
-        ha_port = line.replace('CONFIG_HOMEASSISTANT_PORT=', '')
+    if 'CONFIG_WILLOW_ENDPOINT_HOMEASSISTANT_PORT=' in line:
+        ha_port = line.replace('CONFIG_WILLOW_ENDPOINT_HOMEASSISTANT_PORT=', '')
         ha_port = ha_port.strip('\n')
 
-    if 'CONFIG_HOMEASSISTANT_TLS=' in line:
-        ha_tls = line.replace('CONFIG_HOMEASSISTANT_TLS=', '')
+    if 'CONFIG_WILLOW_ENDPOINT_HOMEASSISTANT_TLS=' in line:
+        ha_tls = line.replace('CONFIG_WILLOW_ENDPOINT_HOMEASSISTANT_TLS=', '')
         ha_tls = ha_tls.strip('\n')
 
-    if 'CONFIG_HOMEASSISTANT_TOKEN=' in line:
-        ha_token = line.replace('CONFIG_HOMEASSISTANT_TOKEN=', '')
+    if 'CONFIG_WILLOW_ENDPOINT_HOMEASSISTANT_TOKEN=' in line:
+        ha_token = line.replace('CONFIG_WILLOW_ENDPOINT_HOMEASSISTANT_TOKEN=', '')
         ha_token = ha_token.strip('\n')
         ha_token = ha_token.replace('\"', '')
 
