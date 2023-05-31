@@ -852,7 +852,7 @@ void app_main(void)
         static lv_style_t lv_st_willow;
         lv_style_init(&lv_st_willow);
 
-        lv_font_t * lv_font_willow;
+        lv_font_t *lv_font_willow;
         ESP_LOGI(TAG, "LOADING FONT");
         lv_font_willow = lv_font_load("A/spiffs/ui/font.bin");
 
@@ -874,7 +874,7 @@ void app_main(void)
         lv_label_set_recolor(lbl_ln4, true);
         lv_obj_add_event_cb(scr_act, cb_scr, LV_EVENT_ALL, NULL);
 
-        //lv_style_set_text_font(&lv_st_willow, &lv_font_montserrat_20);
+        // lv_style_set_text_font(&lv_st_willow, &lv_font_montserrat_20);
 
         ESP_LOGI(TAG, "ADDING STYLE");
         lv_obj_add_style(lbl_hdr, &lv_st_willow, 0);
