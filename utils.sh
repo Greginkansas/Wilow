@@ -192,6 +192,8 @@ config)
     check_container
     check_deps
     idf.py menuconfig
+    python config/willow_config.py
+    cp config/willow.json spiffs/user/config/willow.json
 ;;
 
 clean)
