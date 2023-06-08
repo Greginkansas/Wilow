@@ -40,6 +40,7 @@
 #endif
 
 #include "audio.h"
+#include "config.h"
 #include "display.h"
 #include "input.h"
 #include "network.h"
@@ -609,16 +610,6 @@ static esp_err_t init_spiffs_user(void)
     }
     ESP_LOGI(TAG, "SPIFFS mounted");
 
-    FILE *config = fopen("/spiffs/user/config/willow.json", "r");
-    if (config == NULL) {
-        ESP_LOGE(TAG, "Failed to open config file");
-        ret = ESP_FAIL;
-    } else {
-        ESP_LOGI(TAG, "Opened config file");
-        ret = ESP_OK;
-    }
-    fclose(config);
-
     return ret;
 }
 
@@ -726,6 +717,8 @@ void app_main(void)
     ESP_LOGI(TAG, "Startup complete! Waiting for wake word.");
 
     ESP_ERROR_CHECK_WITHOUT_ABORT(reset_timer(hdl_display_timer, DISPLAY_TIMEOUT_US, false));
+
+    config_print();
 
 #ifdef CONFIG_WILLOW_DEBUG_RUNTIME_STATS
     xTaskCreate(&task_debug_runtime_stats, "dbg_runtime_stats", 4 * 1024, NULL, 0, NULL);
