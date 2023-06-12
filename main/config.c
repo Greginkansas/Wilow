@@ -82,6 +82,44 @@ cleanup:
     free(config);
 }
 
+static void config_update(const char *key, const char *value)
+{
+    char *config = config_read();
+    cJSON *cjson = cJSON_Parse(config);
+    if (cjson == NULL) {
+        const char *eptr = cJSON_GetErrorPtr();
+        if (eptr != NULL) {
+            ESP_LOGE(TAG, "error parsing config file: %s\n", eptr);
+            goto cleanup;
+        }
+    }
+
+    if (!cJSON_ReplaceItemInObjectCaseSensitive(cjson, key, cJSON_CreateString(value))) {
+        ESP_LOGE(TAG, "key %s not found in %s", key, CONFIG_PATH);
+        goto cleanup;
+    }
+
+    FILE *f = fopen(CONFIG_PATH, "w");
+    if (f == NULL) {
+        ESP_LOGE(TAG, "failed to open %s", CONFIG_PATH);
+        goto close;
+    }
+
+    char *json = cJSON_Print(cjson);
+    fputs(json, f);
+    cJSON_free(json);
+
+close:
+    fclose(f);
+
+cleanup:
+    cJSON_Delete(cjson);
+    free(config);
+
+    ESP_LOGI(TAG, "%s updated, restarting", CONFIG_PATH);
+    esp_restart();
+}
+
 static void config_handle_was_data(char *data)
 {
     char *key = NULL;
@@ -99,6 +137,7 @@ static void config_handle_was_data(char *data)
             goto cleanup;
         }
         ESP_LOGI(TAG, "received config update from WAS: %s=%s", key, value);
+        config_update(key, value);
 
 cleanup:
         free(key);
