@@ -1,13 +1,18 @@
 #include <stdio.h>
+#include <string.h>
 #include <sys/stat.h>
 
 #include "cJSON.h"
 #include "esp_log.h"
 #include "esp_spiffs.h"
 
+#include "config.h"
+
 #define CONFIG_PATH "/spiffs/user/config/willow.json"
 
 static const char *TAG = "WILLOW/CONFIG";
+
+struct willow_config wc;
 
 static char *config_read(void)
 {
@@ -56,6 +61,18 @@ void config_parse(void)
     json = cJSON_Print(cjson);
     ESP_LOGI(TAG, "parsed config file:");
     printf("%s\n", json);
+
+    cJSON *wis_server_url = cJSON_GetObjectItemCaseSensitive(cjson, "WILLOW_WIS_SERVER_URL");
+    if (cJSON_IsString(wis_server_url) && wis_server_url->valuestring != NULL) {
+        ESP_LOGI(TAG, "parsed WIS server URL from config");
+        wc.wis_server_url = strdup(wis_server_url->valuestring);
+    }
+
+    cJSON *wis_tts_url = cJSON_GetObjectItemCaseSensitive(cjson, "WILLOW_WIS_TTS_URL");
+    if (cJSON_IsString(wis_tts_url) && wis_tts_url->valuestring != NULL) {
+        ESP_LOGI(TAG, "parsed WIS TTS server URL from config");
+        wc.wis_tts_url = strdup(wis_tts_url->valuestring);
+    }
 
 cleanup:
     cJSON_Delete(cjson);
