@@ -82,6 +82,30 @@ cleanup:
     free(config);
 }
 
+static void config_handle_was_data(char *data)
+{
+    char *key = NULL;
+    char *value = NULL;
+
+    if (strchr(data, '=') != NULL) {
+        key = calloc(sizeof(char), strlen(data) + 1);
+        value = calloc(sizeof(char), strlen(data) + 1);
+
+        strcpy(key, strsep(&data, "="));
+        strcpy(value, data);
+
+        if (key == NULL || value == NULL) {
+            ESP_LOGE(TAG, "key or value is NULL");
+            goto cleanup;
+        }
+        ESP_LOGI(TAG, "received config update from WAS: %s=%s", key, value);
+
+cleanup:
+        free(key);
+        free(value);
+    }
+}
+
 static void cb_ws_event(const void *arg_evh, const esp_event_base_t *base_ev, const int32_t id_ev, const void *ev_data)
 {
     esp_websocket_event_data_t *data = (esp_websocket_event_data_t *)ev_data;
@@ -95,6 +119,7 @@ static void cb_ws_event(const void *arg_evh, const esp_event_base_t *base_ev, co
             if (data->op_code == WS_TRANSPORT_OPCODES_TEXT) {
                 char *resp = strndup((char *)data->data_ptr, data->data_len);
                 ESP_LOGI(TAG, "received text data on WebSocket: %s", resp);
+                config_handle_was_data(resp);
                 free(resp);
             }
             break;
