@@ -47,6 +47,12 @@ choice
     bool "Audio response using WIS TTS - English only for now"
 endchoice
 
+config WILLOW_WAS_URL
+    string "Willow Application Server URL"
+    default "wss://was.tovera.io"
+    help
+        URL for your WAS instance. Supports WS and WSS.
+
 config WILLOW_WIS_SERVER_URL
     depends on WILLOW_USE_WIS
     string "Willow Inference Server URL"

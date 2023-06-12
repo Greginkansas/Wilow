@@ -654,6 +654,7 @@ void app_main(void)
     init_wifi();
 #endif
     init_sntp();
+    init_was();
 
     audio_board_handle_t hdl_audio_board = audio_board_init();
     gpio_set_level(get_pa_enable_gpio(), 0);

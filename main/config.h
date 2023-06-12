@@ -6,3 +6,4 @@ struct willow_config {
 extern struct willow_config wc;
 
 void config_parse(void);
+esp_err_t init_was(void);
