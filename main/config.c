@@ -65,6 +65,17 @@ void config_parse(void)
     ESP_LOGI(TAG, "parsed config file:");
     printf("%s\n", json);
 
+    cJSON *use_multinet = cJSON_GetObjectItemCaseSensitive(cjson, "WILLOW_USE_MULTINET");
+    cJSON *use_wis = cJSON_GetObjectItemCaseSensitive(cjson, "WILLOW_USE_WIS");
+    // needs improving - both values could be set to true in config via dynamic update
+    if (cJSON_IsTrue(use_multinet)) {
+        wc.speech_rec_mode = WILLOW_USE_MULTINET;
+    } else if (cJSON_IsTrue(use_wis)) {
+        wc.speech_rec_mode = WILLOW_USE_WIS;
+    } else {
+        ESP_LOGE(TAG, "invalid Willow Speech Recognition Mode config");
+    }
+
     cJSON *wis_server_url = cJSON_GetObjectItemCaseSensitive(cjson, "WILLOW_WIS_SERVER_URL");
     if (cJSON_IsString(wis_server_url) && wis_server_url->valuestring != NULL) {
         ESP_LOGI(TAG, "parsed WIS server URL from config");
