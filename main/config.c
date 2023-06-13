@@ -94,11 +94,26 @@ static void config_update(const char *key, const char *value)
         }
     }
 
+    if (strcmp(value, "false") == 0) {
+        if (!cJSON_ReplaceItemInObjectCaseSensitive(cjson, key, cJSON_CreateFalse())) {
+            ESP_LOGE(TAG, "key %s not found in %s", key, CONFIG_PATH);
+            goto cleanup;
+        }
+        goto save;
+    } else if (strcmp(value, "true") == 0) {
+        if (!cJSON_ReplaceItemInObjectCaseSensitive(cjson, key, cJSON_CreateTrue())) {
+            ESP_LOGE(TAG, "key %s not found in %s", key, CONFIG_PATH);
+            goto cleanup;
+        }
+        goto save;
+    }
+
     if (!cJSON_ReplaceItemInObjectCaseSensitive(cjson, key, cJSON_CreateString(value))) {
         ESP_LOGE(TAG, "key %s not found in %s", key, CONFIG_PATH);
         goto cleanup;
     }
 
+save:;
     FILE *f = fopen(CONFIG_PATH, "w");
     if (f == NULL) {
         ESP_LOGE(TAG, "failed to open %s", CONFIG_PATH);
