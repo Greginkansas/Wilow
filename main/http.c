@@ -1,7 +1,6 @@
 #include "esp_http_client.h"
 #include "esp_log.h"
 
-#include "shared.h"
 
 static const char *TAG = "WILLOW/HTTP";
 
