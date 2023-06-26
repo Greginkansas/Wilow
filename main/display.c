@@ -4,12 +4,14 @@
 #include "esp_lvgl_port.h"
 
 #include "config.h"
+#include "display.h"
 #include "shared.h"
 #include "system.h"
 
 static const char *TAG = "WILLOW/DISPLAY";
 static int bl_duty_off;
 static int bl_duty_on;
+
 
 esp_err_t init_display(void)
 {
